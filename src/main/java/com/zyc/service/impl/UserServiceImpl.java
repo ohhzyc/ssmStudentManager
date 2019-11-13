@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,7 +32,12 @@ public class UserServiceImpl implements UserService {
     public  int edit(User user){
         return userDao.edit( user);
     }
+
     public int delete(String username){
         return userDao.delete(username);
     }
+
+    public int getTotal(Map<String,Object> queryMap){ return userDao.getTotal(queryMap); }
+
+    public List<User> findList(Map<String,Object> queryMap) { return userDao.findList(queryMap); }
 }

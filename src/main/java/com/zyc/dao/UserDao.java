@@ -3,7 +3,7 @@ package com.zyc.dao;
 import com.zyc.entity.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
 public interface UserDao {
@@ -17,4 +17,8 @@ public interface UserDao {
     public int edit(User user);
 
     public int delete(String username);
+
+    public int getTotal(Map<String,Object> queryMap);
+
+    public List<User> findList(Map<String,Object> queryMap);
 }

@@ -20,4 +20,6 @@ public class StudentController {
         modelAndView.setViewName("studentlist");
         return modelAndView;
     }
+
+
 }

@@ -13,8 +13,6 @@ public class Page {
 
     private int offset;
 
-
-
     public int getPage() {
         return page;
     }

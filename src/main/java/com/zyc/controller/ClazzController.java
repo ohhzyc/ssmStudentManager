@@ -41,7 +41,7 @@ public class ClazzController {
      */
     @RequestMapping(value="/list",method=RequestMethod.GET)
     public ModelAndView list(ModelAndView model){
-        model.setViewName("classList");
+        model.setViewName("clazzlist");
         List<Grade> findAll = gradeService.findAll();
         model.addObject("gradeList",findAll );
         return model;

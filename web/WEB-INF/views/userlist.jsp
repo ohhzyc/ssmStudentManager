@@ -215,7 +215,6 @@
 
             //搜索按钮
             $("#search-btn").click(function(){
-            	alert("sssss");
 				$('#dataList').datagrid('reload',{
                     username:$("#search-username").textbox('getValue')
                 });

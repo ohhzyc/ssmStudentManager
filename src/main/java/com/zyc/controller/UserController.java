@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.zyc.page.Page;
 
 @Controller
 @RequestMapping("/user")
@@ -37,12 +38,20 @@ public class UserController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/getlist",method = RequestMethod.POST)
+    @RequestMapping(value="/getlist",method=RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> list() throws IOException {
-        Map<String,Object> ret = new HashMap<String, Object>();
-        ret.put("rows",userService.selectUser());
-        return  ret;
+    public Map<String, Object> getList(
+            @RequestParam(value="username",required=false,defaultValue="") String username,
+            Page page
+    ){
+        Map<String, Object> ret = new HashMap<String, Object>();
+        Map<String, Object> queryMap = new HashMap<String, Object>();
+        queryMap.put("username", "%"+username+"%");
+        queryMap.put("offset", page.getOffset());
+        queryMap.put("pageSize", page.getRows());
+        ret.put("rows", userService.findList(queryMap));
+        ret.put("total", userService.getTotal(queryMap));
+        return ret;
     }
 
     @RequestMapping(value = "/add",method = RequestMethod.POST)
