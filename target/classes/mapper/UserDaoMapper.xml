@@ -24,4 +24,11 @@
     <delete id="delete" parameterType="String">
         delete from user where id in (${value})
     </delete>
+
+    <select id="getTotal" parameterType="Map" resultType="Integer">
+        select count(id) from user where username like #{username}
+    </select>
+    <select resultType="User" parameterType="Map" id="findList">
+        select * from user where username like #{username} limit #{offset},#{pageSize}
+    </select>
 </mapper>
