@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -15,13 +16,13 @@
 	<script type="text/javascript" src='../easyui/js/outlook2.js'> </script>
     <script type="text/javascript">
         var _menus = {"menus":[
-
-                {"menuid":"1","icon":"","menuname":"用户（管理员）管理",
-                    "menus":[
-                        {"menuid":"11","menuname":"用户列表","icon":"icon-user-teacher","url":"../user/list"}
-                    ]
-                },
-
+                <c:if test="${userType == 1}">
+                    {"menuid":"1","icon":"","menuname":"用户（管理员）管理",
+                        "menus":[
+                            {"menuid":"11","menuname":"用户列表","icon":"icon-user-teacher","url":"../user/list"}
+                        ]
+                    },
+                </c:if>
                 {"menuid":"3","icon":"","menuname":"年级信息管理",
                     "menus":[
                         {"menuid":"31","menuname":"年级列表","icon":"icon-world","url":"../grade/list"},

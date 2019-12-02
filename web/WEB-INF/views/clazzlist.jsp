@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>年级列表</title>
+	<title>班级列表</title>
 	<link rel="stylesheet" type="text/css" href="../easyui/themes/default/easyui.css">
 	<link rel="stylesheet" type="text/css" href="../easyui/themes/icon.css">
 	<link rel="stylesheet" type="text/css" href="../easyui/css/demo.css">
@@ -12,12 +12,13 @@
 	<script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="../easyui/js/validateExtends.js"></script>
 	<script type="text/javascript">
+        var gradeList = ${gradeListJson};
         $(function() {
             var table;
 
             //datagrid初始化
             $('#dataList').datagrid({
-                title:'年级列表',
+                title:'班级列表',
                 iconCls:'icon-more',//图标
                 border: true,
                 collapsible:false,//是否可折叠的
@@ -34,7 +35,17 @@
                 columns: [[
                     {field:'chk',checkbox: true,width:50},
                     {field:'id',title:'ID',width:50, sortable: true},
-                    {field:'name',title:'年级名',width:150, sortable: true},
+                    {field:'name',title:'班级名',width:150, sortable: true},
+                    {field:'gradeId',title:'所属年级',width:150, sortable: true,
+                        formatter:function(value,index,row){
+                            for(var i=0;i<gradeList.length;i++){
+                                if(gradeList[i].id == value){
+                                    return gradeList[i].name;
+                                }
+                            }
+                            return value;
+                        }
+                    },
                     {field:'remark',title:'备注',width:300},
                 ]],
                 toolbar: "#toolbar"
@@ -74,7 +85,7 @@
                     $(selectRows).each(function(i, row){
                         ids[i] = row.id;
                     });
-                    $.messager.confirm("消息提醒", "如果年级下存在班级信息则无法删除，须先删除年级下属的班级信息？", function(r){
+                    $.messager.confirm("消息提醒", "如果班级下存在学生信息则无法删除，须先删除班级下属的学生信息？", function(r){
                         if(r){
                             $.ajax({
                                 type: "post",
@@ -100,9 +111,9 @@
 
             //设置添加窗口
             $("#addDialog").dialog({
-                title: "添加年级",
+                title: "添加班级",
                 width: 450,
-                height: 350,
+                height: 400,
                 iconCls: "icon-add",
                 modal: true,
                 collapsible: false,
@@ -154,11 +165,11 @@
                 }
             });
 
-            //编辑年级信息
+            //编辑班级信息
             $("#editDialog").dialog({
-                title: "修改年级信息",
+                title: "修改班级信息",
                 width: 450,
-                height: 350,
+                height: 400,
                 iconCls: "icon-edit",
                 modal: true,
                 collapsible: false,
@@ -210,14 +221,17 @@
                     //设置值
                     $("#edit-id").val(selectRow.id);
                     $("#edit_name").textbox('setValue', selectRow.name);
+                    $("#edit_gradeId").combobox('setValue', selectRow.gradeId);
                     $("#edit_remark").textbox('setValue', selectRow.remark);
                 }
             });
 
+
             //搜索按钮
             $("#search-btn").click(function(){
                 $('#dataList').datagrid('reload',{
-                    name:$("#search-name").textbox('getValue')
+                    name:$("#search-name").textbox('getValue'),
+                    gradeId:$("#search-grade-id").combobox('getValue')
                 });
             });
         });
@@ -240,7 +254,14 @@
 		<c:if test="${userType == 1}">
 			<a id="delete" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-some-delete',plain:true">删除</a>
 		</c:if>
-		年级名：<input id="search-name" class="easyui-textbox" />
+		班级名：<input id="search-name" class="easyui-textbox" />
+		所属年级：
+		<select id="search-grade-id" class="easyui-combobox" style="width: 150px;">
+			<option value="">全部</option>
+			<c:forEach items="${ gradeList}" var="grade">
+				<option value="${grade.id }">${grade.name }</option>
+			</c:forEach>
+		</select>
 		<a id="search-btn" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
 	</div>
 </div>
@@ -250,9 +271,22 @@
 	<form id="addForm" method="post">
 		<table id="addTable" cellpadding="8">
 			<tr >
-				<td>年级名:</td>
+				<td>班级名:</td>
 				<td>
-					<input id="add_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写年级名'"  />
+					<input id="add_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写班级名'"  />
+				</td>
+			</tr>
+			<tr >
+				<td>所属年级:</td>
+				<td>
+					<select id="add_gradeId"  class="easyui-combobox" style="width: 200px;" name="gradeId" data-options="required:true, missingMessage:'请选择所属年级'">
+						<%
+							request.getSession();
+						%>
+						<c:forEach items="${ gradeList}" var="grade">
+							<option value="${grade.id }">${grade.name }</option>
+						</c:forEach>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -270,9 +304,19 @@
 		<input type="hidden" name="id" id="edit-id">
 		<table id="editTable" border=0 cellpadding="8" >
 			<tr >
-				<td>年级名:</td>
+				<td>班级名:</td>
 				<td>
-					<input id="edit_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写年级名'"  />
+					<input id="edit_name"  class="easyui-textbox" style="width: 200px; height: 30px;" type="text" name="name" data-options="required:true, missingMessage:'请填写班级名'"  />
+				</td>
+			</tr>
+			<tr >
+				<td>所属年级:</td>
+				<td>
+					<select id="edit_gradeId"  class="easyui-combobox" style="width: 200px;" name="gradeId" data-options="required:true, missingMessage:'请选择所属年级'">
+						<c:forEach items="${ gradeList}" var="grade">
+							<option value="${grade.id }">${grade.name }</option>
+						</c:forEach>
+					</select>
 				</td>
 			</tr>
 			<tr>

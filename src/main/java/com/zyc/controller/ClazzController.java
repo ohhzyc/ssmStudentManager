@@ -35,7 +35,7 @@ public class ClazzController {
     @Autowired
     private ClazzService clazzService;
     /**
-     * 班级列表页
+     * 年级列表页
      * @param model
      * @return
      */
@@ -48,7 +48,7 @@ public class ClazzController {
     }
 
     /**
-     * 获取班级列表
+     * 获取年级列表
      * @param name
      * @param page
      * @return
@@ -74,7 +74,7 @@ public class ClazzController {
     }
 
     /**
-     * 编辑班级信息
+     * 编辑年级信息
      * @param clazz
      * @return
      */
@@ -84,7 +84,7 @@ public class ClazzController {
         Map<String, String> ret = new HashMap<String, String>();
         if(StringUtils.isEmpty(clazz.getName())){
             ret.put("type", "error");
-            ret.put("msg", "班级名称不能为空！");
+            ret.put("msg", "年级名称不能为空！");
             return ret;
         }
         if(clazz.getGradeId() == null){
@@ -94,17 +94,17 @@ public class ClazzController {
         }
         if(clazzService.edit(clazz) <= 0){
             ret.put("type", "error");
-            ret.put("msg", "班级修改失败！");
+            ret.put("msg", "年级修改失败！");
             return ret;
         }
         ret.put("type", "success");
-        ret.put("msg", "班级修改成功！");
+        ret.put("msg", "年级修改成功！");
         return ret;
     }
 
 
     /**
-     * 添加班级信息
+     * 添加年级信息
      * @param clazz
      * @return
      */
@@ -114,7 +114,7 @@ public class ClazzController {
         Map<String, String> ret = new HashMap<String, String>();
         if(StringUtils.isEmpty(clazz.getName())){
             ret.put("type", "error");
-            ret.put("msg", "班级名称不能为空！");
+            ret.put("msg", "年级名称不能为空！");
             return ret;
         }
         if(clazz.getGradeId() == null){
@@ -124,16 +124,16 @@ public class ClazzController {
         }
         if(clazzService.add(clazz) <= 0){
             ret.put("type", "error");
-            ret.put("msg", "班级添加失败！");
+            ret.put("msg", "年级添加失败！");
             return ret;
         }
         ret.put("type", "success");
-        ret.put("msg", "班级添加成功！");
+        ret.put("msg", "年级添加成功！");
         return ret;
     }
 
     /**
-     * 删除班级信息
+     * 删除年级信息
      * @param ids
      * @return
      */
@@ -161,11 +161,11 @@ public class ClazzController {
             }
         } catch (Exception e) {
             ret.put("type", "error");
-            ret.put("msg", "该班级下存在学生信息，请勿冲动！");
+            ret.put("msg", "该年级下存在学生信息，请勿冲动！");
             return ret;
         }
         ret.put("type", "success");
-        ret.put("msg", "班级删除成功！");
+        ret.put("msg", "年级删除成功！");
         return ret;
     }
 }

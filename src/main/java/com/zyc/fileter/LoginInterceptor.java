@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 登录过滤拦截器
- * @author llq
+ * @author zyc
  *
  */
 public class LoginInterceptor  implements HandlerInterceptor{
@@ -43,8 +43,7 @@ public class LoginInterceptor  implements HandlerInterceptor{
 		//System.out.println("进入拦截器，url = " + url);
 		Object user = request.getSession().getAttribute("user");
 		if(user == null){
-			//表示未登录或者登录状态失效
-			System.out.println("未登录或登录失效，url = " + url);
+			//表示未登录或者登录状态失
 			if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))){
 				//ajax请求
 				Map<String, String> ret = new HashMap<String, String>();

@@ -4,7 +4,7 @@ package com.zyc.entity;
 import org.springframework.stereotype.Component;
 
 /**
- * 班级实体
+ * 年级实体
  * @author llq
  *
  */
@@ -38,7 +38,6 @@ public class Clazz {
 	public void setGradeId(Long gradeId) {
 		this.gradeId = gradeId;
 	}
-
 
 
 }

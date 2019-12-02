@@ -141,7 +141,7 @@ public class GradeController {
         } catch (Exception e) {
             // TODO: handle exception
             ret.put("type", "error");
-            ret.put("msg", "该年级下存在班级信息，请勿冲动！");
+            ret.put("msg", "该年级下存在年级信息，请勿冲动！");
             return ret;
         }
         ret.put("type", "success");

@@ -9,12 +9,12 @@ import java.util.Date;
 public class User {
 
     private long id;
-    private String email;
+
     private String password;
     private String username;
     private String role;
     private int status;
-    private Date regTime;
+
     private String regIp;
 
     public long getId() {
@@ -23,14 +23,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -65,13 +57,7 @@ public class User {
         this.status = status;
     }
 
-    public Date getRegTime() {
-        return regTime;
-    }
 
-    public void setRegTime(Date regTime) {
-        this.regTime = regTime;
-    }
 
     public String getRegIp() {
         return regIp;
@@ -85,12 +71,10 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", username='" + username + '\'' +
                 ", role='" + role + '\'' +
                 ", status=" + status +
-                ", regTime=" + regTime +
                 ", regIp='" + regIp + '\'' +
                 '}';
     }

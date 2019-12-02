@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * 班级dao
+ * 年级dao
  * @author llq
  *
  */

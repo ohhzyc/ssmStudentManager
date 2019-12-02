@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class Student {
     private Long id;
     private String sn;//学号
-    private Long clazzId;//班级id
+    private Long clazzId;//年级id
     private String username;
     private String password;
     private String sex;

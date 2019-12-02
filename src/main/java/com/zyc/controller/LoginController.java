@@ -1,6 +1,8 @@
 package com.zyc.controller;
 
+import com.zyc.entity.Student;
 import com.zyc.entity.User;
+import com.zyc.service.StudentService;
 import com.zyc.service.UserService;
 import com.zyc.utils.CpachaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private  StudentService studentService;
     /**
      * 登陆页面
      * @param modelAndView
@@ -43,8 +47,16 @@ public class LoginController {
     @RequestMapping("index")
     public ModelAndView index(ModelAndView model,HttpServletRequest request){
         model.setViewName("index");
-        User user = (User) request.getSession().getAttribute("user");
-        request.setAttribute("user",user);
+        int type = (int)request.getSession().getAttribute("userType");
+        if(type==1){
+            User user= (User) request.getSession().getAttribute("user");
+            request.setAttribute("user",user);
+        }
+        if(type==2){
+            Student student= (Student) request.getSession().getAttribute("user");
+            request.setAttribute("user",student);
+        }
+
         return model;
     }
 
@@ -81,66 +93,78 @@ public class LoginController {
     /**
      * 检验账号密码
      */
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @RequestMapping(value = "/login",method=RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> login(@RequestParam(value = "username",required = true) String username,
-                                         @RequestParam(value = "password",required = true) String password,
-                                         @RequestParam(value = "vcode",required = true) String vcode,
-                                         @RequestParam(value = "type",required = true) int type,
-                                         HttpServletResponse response,HttpServletRequest request
-                                        ){
-
-        Map<String,String> ret = new HashMap<String, String>();
+    public Map<String, String> login(
+            @RequestParam(value="username",required=true) String username,
+            @RequestParam(value="password",required=true) String password,
+            @RequestParam(value="vcode",required=true) String vcode,
+            @RequestParam(value="type",required=true) int type,
+            HttpServletRequest request
+    ){
+        Map<String, String> ret = new HashMap<String, String>();
         if(StringUtils.isEmpty(username)){
-            ret.put("type","error");
-            ret.put("msg","用户名不能为空！");
+            ret.put("type", "error");
+            ret.put("msg", "用户名不能为空!");
             return ret;
         }
-
         if(StringUtils.isEmpty(password)){
-            ret.put("type","error");
-            ret.put("msg","密码不能为空！");
+            ret.put("type", "error");
+            ret.put("msg", "密码不能为空!");
             return ret;
         }
         if(StringUtils.isEmpty(vcode)){
-            ret.put("type","error");
-            ret.put("msg","验证码不能为空！");
+            ret.put("type", "error");
+            ret.put("msg", "验证码不能为空!");
             return ret;
         }
         String loginCpacha = (String)request.getSession().getAttribute("loginCpacha");
         if(StringUtils.isEmpty(loginCpacha)){
-            ret.put("type","error");
-            ret.put("msg","长时间未操作，会话已失效！");
+            ret.put("type", "error");
+            ret.put("msg", "长时间未操作，会话已失效，请刷新后重试!");
             return ret;
         }
-        if (!vcode.toUpperCase().equals(loginCpacha.toUpperCase())){
-            ret.put("type","error");
-            ret.put("msg","验证码错误！");
+        if(!vcode.toUpperCase().equals(loginCpacha.toUpperCase())){
+            ret.put("type", "error");
+            ret.put("msg", "验证码错误!");
             return ret;
         }
-        request.getSession().setAttribute("loginCpacha",null);
-        //通过数据库校验账号密码
-        if (type == 1){
+        request.getSession().setAttribute("loginCpacha", null);
+        //从数据库中去查找用户
+        if(type == 1){
+            //管理员
             User user = userService.findByUserName(username);
-            if(user==null){
-                ret.put("type","error");
-                ret.put("msg","该用户不存在！");
-                return  ret;
+            if(user == null){
+                ret.put("type", "error");
+                ret.put("msg", "不存在该用户!");
+                return ret;
             }
-            if (!password.equals(user.getPassword())){
-                ret.put("type","error");
-                ret.put("msg","密码错误！");
-                return  ret;
+            if(!password.equals(user.getPassword())){
+                ret.put("type", "error");
+                ret.put("msg", "密码错误!");
+                return ret;
             }
-            request.getSession().setAttribute("user",user);
+            request.getSession().setAttribute("user", user);
         }
-        if (type==2){
+        if(type == 2){
             //学生
+            Student student = studentService.findByUserName(username);
+            if(student == null){
+                ret.put("type", "error");
+                ret.put("msg", "不存在该学生!");
+                return ret;
+            }
+            if(!password.equals(student.getPassword())){
+                ret.put("type", "error");
+                ret.put("msg", "密码错误!");
+                return ret;
+            }
+            request.getSession().setAttribute("user", student);
         }
-
-        ret.put("type","success");
-        ret.put("msg","登录成功！");
-        return  ret;
-
+        request.getSession().setAttribute("userType", type);
+        ret.put("type", "success");
+        ret.put("msg", "登录成功!");
+        return ret;
     }
+
 }
